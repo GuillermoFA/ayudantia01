@@ -31,3 +31,4 @@ C:\Users\guill\OneDrive\Escritorio\ayudantia01\api\obj\Debug\net8.0\refint\api.d
 C:\Users\guill\OneDrive\Escritorio\ayudantia01\api\obj\Debug\net8.0\api.pdb
 C:\Users\guill\OneDrive\Escritorio\ayudantia01\api\obj\Debug\net8.0\api.genruntimeconfig.cache
 C:\Users\guill\OneDrive\Escritorio\ayudantia01\api\obj\Debug\net8.0\ref\api.dll
+C:\Users\guill\OneDrive\Escritorio\ayudantia01\api\obj\Debug\net8.0\api.sourcelink.json
