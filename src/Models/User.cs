@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,11 +15,9 @@ namespace api.src.Models
 
 
         // Entityframework relationships
-        public List<Product> Products { get; set; } = []; // arroz, azucar, leche, pan...
+        public List<Product> Products { get;} = []; // arroz, azucar, leche, pan...
 
         public int RoleId { get; set; }
         public Role Role { get; set; } = null!; // admin, user, guest...
-
-
     }
 }

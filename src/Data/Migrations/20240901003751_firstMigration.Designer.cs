@@ -10,7 +10,7 @@ using api.src.Data;
 namespace api.src.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240901002148_firstMigration")]
+    [Migration("20240901003751_firstMigration")]
     partial class firstMigration
     {
         /// <inheritdoc />
