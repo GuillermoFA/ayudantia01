@@ -9,7 +9,7 @@ namespace api.src.Interfaces
 {
     public interface IProductRepository
     {
-        Task<List<Product>> GetAll();
+        Task <List<Product>> GetAll();
         Task<Product?> GetById(int id);
         Task<Product> Post(Product product);
         Task<Product?> Put(int id, UpdateProductRequestDto productDto);
