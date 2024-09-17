@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.src.Data;
 using api.src.Dtos;
+using api.src.Interfaces;
 using api.src.Mappers;
 using api.src.Models;
+using api.src.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,16 +17,16 @@ namespace api.src.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public ProductController(ApplicationDBContext context)
+        private readonly IProductRepository _productRepository;
+        public ProductController(IProductRepository productRepository)
         {
-            _context = context;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _productRepository.GetAll();
             var productDto = products.Select(p => p.ToProductDto());
             return Ok(productDto);
         }
@@ -32,7 +34,7 @@ namespace api.src.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productRepository.GetById(id);
             if (product == null)
             {
                 return NotFound();
@@ -44,37 +46,30 @@ namespace api.src.Controllers
         public async Task<IActionResult> Post([FromBody] CreateProductRequestDto productDto)
         {
             var productModel = productDto.ToProductFromCreateDto();
-            await _context.Products.AddAsync(productModel);
-            await _context.SaveChangesAsync();
+            await _productRepository.Post(productModel);
             return CreatedAtAction(nameof(GetById), new { id = productModel.Id }, productModel.ToProductDto());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateProductRequestDto updateDto)
         {
-            var ProductModel = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var ProductModel = await _productRepository.Put(id, updateDto);
             if (ProductModel == null)
             {
                 return NotFound();
             }
-
-            ProductModel.Name = updateDto.Name;
-            ProductModel.Price = updateDto.Price;
-            await _context.SaveChangesAsync();
             return Ok(ProductModel.ToProductDto());
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _productRepository.Delete(id);
             if (product == null)
             {
                 return NotFound();
             }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
