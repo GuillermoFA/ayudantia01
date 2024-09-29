@@ -13,6 +13,6 @@ namespace api.src.Models
         public int Price { get; set; } // 1500
 
         // Entityframework relationships
-        public List<User> Users { get;} = []; // juan, pedro, maria, jose...
+        public List<User> Users { get; set;} = []; // juan, pedro, maria, jose...
     }
 }
