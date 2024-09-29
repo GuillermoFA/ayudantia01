@@ -8,6 +8,7 @@ namespace api.src.Models
 {
     public class AppUser : IdentityUser
     {
-        // Empty for now
+        // Empty for now 
+        //TODO: Add custom properties / referentes al taller *productos, ...*
     }
 }

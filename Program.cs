@@ -49,7 +49,7 @@ builder.Services.AddAuthentication(
             ValidateAudience = true,
             ValidAudience = builder.Configuration["JWT:Audience"],
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"] ?? throw new ArgumentNullException("JWT:Signingkey"))),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Signingkey"] ?? throw new ArgumentNullException("JWT:Signingkey"))),
         };
         //TODO: PARA LOS ESTUDIANTES, ENVES DE USAR APPSETTINGS.JSON, USAR ENVIRONMENT VARIABLES
     });
