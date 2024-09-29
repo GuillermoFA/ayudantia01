@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.src.Models
 {
-    public class Role
+    public class AppUser : IdentityUser
     {
-        // Atributos
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        // Empty for now
     }
 }

@@ -14,7 +14,5 @@ namespace api.src.Models
         public int Price { get; set; } // 1500
 
         // Entityframework relationships
-        [JsonIgnore]
-        public List<User> Users { get; set;} = []; // juan, pedro, maria, jose...
     }
 }
