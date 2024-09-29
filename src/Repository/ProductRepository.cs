@@ -46,8 +46,10 @@ namespace api.src.Repository
                 }
             }
 
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
-            return await products.ToListAsync();
+
+            return await products.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Product?> GetById(int id)
