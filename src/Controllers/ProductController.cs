@@ -31,7 +31,7 @@ namespace api.src.Controllers
             return Ok(productDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id: int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var product = await _productRepository.GetById(id);
@@ -51,7 +51,7 @@ namespace api.src.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id: int}")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateProductRequestDto updateDto)
         {
             var ProductModel = await _productRepository.Put(id, updateDto);
@@ -62,7 +62,7 @@ namespace api.src.Controllers
             return Ok(ProductModel.ToProductDto());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id: int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var product = await _productRepository.Delete(id);
