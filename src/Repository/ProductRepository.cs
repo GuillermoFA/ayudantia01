@@ -36,7 +36,15 @@ namespace api.src.Repository
         {
             var products = _context.Products.AsQueryable();
 
-            if(!string.IsNullOrEmpty(query.Name)) products = products.Where(x => x.Name.Contains(query.Name));
+            if(!string.IsNullOrWhiteSpace(query.Name)) products = products.Where(x => x.Name.Contains(query.Name));
+
+            if(!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if(query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    products = query.IsDescending ? products.OrderByDescending(x => x.Name) : products.OrderBy(x => x.Name);
+                }
+            }
 
 
             return await products.ToListAsync();
