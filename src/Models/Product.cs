@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace api.src.Models
@@ -13,6 +14,7 @@ namespace api.src.Models
         public int Price { get; set; } // 1500
 
         // Entityframework relationships
+        [JsonIgnore]
         public List<User> Users { get; set;} = []; // juan, pedro, maria, jose...
     }
 }

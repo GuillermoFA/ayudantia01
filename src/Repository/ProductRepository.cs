@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.src.Data;
 using api.src.Dtos;
+using api.src.Helpers;
 using api.src.Interfaces;
 using api.src.Models;
 using Microsoft.EntityFrameworkCore;
@@ -31,9 +32,14 @@ namespace api.src.Repository
             return productModel;
         }
 
-        public async Task<List<Product>> GetAll()
+        public async Task<List<Product>> GetAll(QueryObject query)
         {
-            return await _context.Products.ToListAsync();
+            var products = _context.Products.AsQueryable();
+
+            if(!string.IsNullOrEmpty(query.Name)) products = products.Where(x => x.Name.Contains(query.Name));
+
+
+            return await products.ToListAsync();
         }
 
         public async Task<Product?> GetById(int id)

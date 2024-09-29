@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.src.Data;
+using api.src.Mappers;
 using api.src.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,23 +23,39 @@ namespace api.src.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var users = _context.Users
                             .Include(u => u.Role)
+                            .Include(u => u.Products)
                             .ToList();
-            return Ok(users);
+
+            var usersDto = users.Select(u => u.ToUserDto()).ToList();
+            return Ok(usersDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetById([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var user = _context.Users
                             .Include(u => u.Role)
+                            .Include(u => u.Products)
                             .FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
             }
-            return Ok(user);
+
+            var userDto = user.ToUserDto();
+            return Ok(userDto);
         }
 
         [HttpPost]
@@ -55,7 +72,7 @@ namespace api.src.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult Put([FromRoute] int id, [FromBody] User user)
         {
             var role = _context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
@@ -79,7 +96,7 @@ namespace api.src.Controllers
             return Ok(userToUpdate);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult Delete([FromRoute] int id)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
@@ -93,45 +110,24 @@ namespace api.src.Controllers
             return Ok("User Deleted");
         }
 
-        [HttpPost("withCookie")]
-        public IActionResult PostByCookie([FromBody] User user)
+        [HttpPost("{userId:int}/buy/{productId:int}")] // Jorge compra arroz, Pepito compra pan...
+        public IActionResult BuyProduct([FromRoute] int userId, [FromRoute] int productId)
         {
-            var role = _context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
-            if (role == null)
-            {
-                return BadRequest("Role not found");
-            }
+            var user = _context.Users
+                            .Include(u => u.Products)
+                            .FirstOrDefault(u => u.Id == userId);
+            if (user == null) return NotFound("User not found");
 
-            _context.Users.Add(user);
+
+            var product = _context.Products.FirstOrDefault(p => p.Id == productId);
+            if (product == null) return NotFound("Product not found");
+
+            if(user.Products.Any( p=> p.Id == productId)) return BadRequest("User already own this product");
+
+            user.Products.Add(product);
             _context.SaveChanges();
-
-            Response.Cookies.Append("UserId", user.Id.ToString(), new CookieOptions{
-                HttpOnly = true,
-                Expires = DateTime.Now.AddMinutes(5)
-            });
-
-            return Ok(user);
+            return Ok($"Product {product.Name} bought by {user.Name}");
         }
-
-        [HttpGet("me")]
-        public IActionResult GetCurrentUser()
-        {
-            if(Request.Cookies.TryGetValue("UserId", out var userId))
-            {
-                var user = _context.Users
-                            .Include(u => u.Role)
-                            .FirstOrDefault(u => u.Id == int.Parse(userId));
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                return Ok(user);
-            }
-            return NotFound("UserId cookie not found");
-        }
-
-
-
 
     }
 }

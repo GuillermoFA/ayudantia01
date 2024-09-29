@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.src.Data;
 using api.src.Dtos;
+using api.src.Helpers;
 using api.src.Interfaces;
 using api.src.Mappers;
 using api.src.Models;
@@ -24,16 +25,26 @@ namespace api.src.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var products = await _productRepository.GetAll();
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var products = await _productRepository.GetAll(query);
             var productDto = products.Select(p => p.ToProductDto());
             return Ok(productDto);
         }
 
-        [HttpGet("{id: int}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var product = await _productRepository.GetById(id);
             if (product == null)
             {
@@ -45,15 +56,23 @@ namespace api.src.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateProductRequestDto productDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var productModel = productDto.ToProductFromCreateDto();
             await _productRepository.Post(productModel);
             return CreatedAtAction(nameof(GetById), new { id = productModel.Id }, productModel.ToProductDto());
         }
 
         [HttpPut]
-        [Route("{id: int}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateProductRequestDto updateDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var ProductModel = await _productRepository.Put(id, updateDto);
             if (ProductModel == null)
             {
@@ -62,7 +81,7 @@ namespace api.src.Controllers
             return Ok(ProductModel.ToProductDto());
         }
 
-        [HttpDelete("{id: int}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var product = await _productRepository.Delete(id);
