@@ -14,18 +14,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
 Env.Load();
-
-var CloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
+var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
     var cloudinaryAccount = new Account(
-        CloudinarySettings!.CloudName,
-        CloudinarySettings.ApiKey,
-        CloudinarySettings.ApiSecret
+        cloudinarySettings!.CloudName,
+        cloudinarySettings.ApiKey,
+        cloudinarySettings.ApiSecret
     );
-var cloudinary = new Cloudinary(cloudinaryAccount);
+    var cloudinary = new Cloudinary(cloudinaryAccount);
+    builder.Services.AddSingleton(cloudinary);
 
-builder.Services.AddSingleton(cloudinary);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -21,6 +21,10 @@ namespace api.src.Service
         {
             _config = config;
             var signingKey = _config["JWT:SigningKey"];
+            if (string.IsNullOrEmpty(signingKey))
+            {
+                throw new ArgumentNullException(nameof(signingKey), "Signing key cannot be null or empty.");
+            }
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
         }
 

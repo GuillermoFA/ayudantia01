@@ -16,5 +16,8 @@ namespace api.src.Dtos
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Price must be between 1 and 1000000")]
         public int Price { get; set; }
+
+        [Required]
+        public IFormFile Image { get; set; } = null!;
     }
 }

@@ -12,6 +12,7 @@ namespace api.src.Models
         public int Id { get; set; } // 1 
         public string Name { get; set; } = string.Empty; // arroz
         public int Price { get; set; } // 1500
+        public string ImageUrl { get; set; } = string.Empty; // https://cloudinary.com/1234
 
         // Entityframework relationships
     }

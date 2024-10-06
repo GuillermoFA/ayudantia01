@@ -12,7 +12,7 @@ namespace api.src.Interfaces
     {
         Task <List<Product>> GetAll(QueryObject query);
         Task<Product?> GetById(int id);
-        Task<Product> Post(Product product);
+        Task<Product> Post(Product request);
         Task<Product?> Put(int id, UpdateProductRequestDto productDto);
         Task<Product?> Delete(int id);
     }
